@@ -1,7 +1,10 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
+import 'package:iptv/core/widgets/snack_bars/custom_snack_bar.dart';
 
 class StartViewBody extends StatelessWidget {
   const StartViewBody({super.key});
@@ -104,7 +107,7 @@ class StartViewBody extends StatelessWidget {
                       _step(
                         context,
                         icon: Icons.public,
-                        text: 'Visit: https://iboplayer.com',
+                        text: 'Visit: https://beeplayer1.com',
                       ),
                       const SizedBox(height: 8),
                       _step(
@@ -216,8 +219,13 @@ class StartViewBody extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            await Clipboard.setData(ClipboardData(text: value));
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            CustomSnackBar().showCustomSnackBar(context: context, message: "$label Copied", type: AnimatedSnackBarType.success);
+          },
           icon: const Icon(Icons.copy, color: Colors.white),
+          tooltip: 'Copy',
         )
       ],
     );
