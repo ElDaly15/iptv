@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart' as g;
 import 'package:iptv/core/utils/app_images.dart';
+import 'package:iptv/featuers/start/presentation/views/start_view.dart';
 
 class SplashViewBody extends StatefulWidget {
   const SplashViewBody({super.key});
@@ -51,10 +52,9 @@ class _SplashViewBodyState extends State<SplashViewBody>
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
       ]);
-      // Navigate to next screen here if needed
-      // g.Get.to(() => const HomeView(),
-      //   transition: g.Transition.fade,
-      //   duration: const Duration(milliseconds: 800));
+      g.Get.to(() => const StartView(),
+        transition: g.Transition.fade,
+        duration: const Duration(milliseconds: 400));
     });
   }
 
