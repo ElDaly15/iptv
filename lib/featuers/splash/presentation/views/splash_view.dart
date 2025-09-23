@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/featuers/splash/presentation/views/widgets/splash_view_body.dart';
 
 class SplashView extends StatelessWidget {
@@ -7,7 +8,7 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff4f2b1d),
+      backgroundColor: AppColors.secondaryColorTheme,
       body: const SplashViewBody(),
     );
   }

@@ -2,13 +2,13 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:iptv/core/utils/app_styles.dart';
+import 'package:iptv/featuers/splash/presentation/views/splash_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // Ensure app starts in portrait for the splash screen
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
+    DeviceOrientation.portraitUp,
   ]);
   runApp(DevicePreview(
     enabled: !kReleaseMode,
@@ -23,11 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello, World!', style: TextStyles.font20Medium(context)),
-        ),
-      ),
+      home: SplashView(),
     );
   }
 }

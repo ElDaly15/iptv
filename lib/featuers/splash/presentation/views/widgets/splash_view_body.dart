@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart' as g;
+import 'package:iptv/core/utils/app_images.dart';
 
 class SplashViewBody extends StatefulWidget {
   const SplashViewBody({super.key});
@@ -18,6 +20,10 @@ class _SplashViewBodyState extends State<SplashViewBody>
   @override
   void initState() {
     super.initState();
+    // Lock orientation to portrait on splash
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -39,17 +45,22 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
     _animationController.forward();
 
-    Future.delayed(
-        const Duration(milliseconds: 3500),
-       (){
-            // g.Get.to(() => const HomeView(),
-              //  transition: g.Transition.fade,
-               // duration: const Duration(milliseconds: 800));
+    Future.delayed(const Duration(milliseconds: 3500), () {
+      // After splash, unlock to landscape for the rest of the app
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+      // Navigate to next screen here if needed
+      // g.Get.to(() => const HomeView(),
+      //   transition: g.Transition.fade,
+      //   duration: const Duration(milliseconds: 800));
     });
   }
 
   @override
   void dispose() {
+    // Optional: don't reset here to keep next screens in landscape
     _animationController.dispose();
     super.dispose();
   }
@@ -71,7 +82,7 @@ class _SplashViewBodyState extends State<SplashViewBody>
                 ),
               );
             },
-            child: Image.asset(Assets.imagesLogoCaffeineErased),
+            child: Image.asset(Assets.imagesLogo),
           ),
         ),
       ],
