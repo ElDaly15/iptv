@@ -47,12 +47,8 @@ class _SplashViewBodyState extends State<SplashViewBody>
     _animationController.forward();
 
     Future.delayed(const Duration(milliseconds: 3500), () {
-      // After splash, unlock to landscape for the rest of the app
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-      g.Get.to(() => const StartView(),
+      // Replace splash with next screen, keep portrait during transition
+      g.Get.off(() => const StartView(),
         transition: g.Transition.fade,
         duration: const Duration(milliseconds: 400));
     });
