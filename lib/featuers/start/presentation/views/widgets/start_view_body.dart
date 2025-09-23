@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +31,7 @@ class StartViewBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
@@ -37,12 +40,12 @@ class StartViewBody extends StatelessWidget {
                             height: 96,
                             fit: BoxFit.contain,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 8),
                           Text(
                             'Bee TV',
                              style: TextStyles
                                  .font22ExtraBold(context)
-                                 .copyWith(color: Colors.white, fontSize: 44),
+                                 .copyWith(color: Colors.white ,fontSize: 32),
                           ),
                         ],
                       ),
@@ -74,7 +77,7 @@ class StartViewBody extends StatelessWidget {
                              .font18ExtraBold(context)
                              .copyWith(color: Colors.white),
                       ),
-                     
+                     SizedBox(height: 15,),
                     ],
                   ),
                 ),
@@ -83,7 +86,7 @@ class StartViewBody extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 5,
+          flex: 7,
           child: Container(
             color: rightBg,
             child: Center(
