@@ -105,7 +105,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                           const Icon(Icons.location_on, color: AppColors.yellowColor, size: 20),
                           const SizedBox(width: 6),
                           Text(
-                            _city != null && _country != null ? '${_city}, ${_country}' : 'Locating...',
+                            _city != null && _country != null ? '$_city, $_country' : 'Locating...',
                             style: TextStyles.font14Medium(context).copyWith(color: AppColors.whiteColor),
                           ),
                         ],
