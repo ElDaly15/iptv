@@ -3,10 +3,12 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart' as g;
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/core/widgets/snack_bars/custom_snack_bar.dart';
+import 'package:iptv/featuers/home/presentation/views/home_view.dart';
 
 class StartViewBody extends StatelessWidget {
   const StartViewBody({super.key});
@@ -31,7 +33,6 @@ class StartViewBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Image.asset(
@@ -43,41 +44,41 @@ class StartViewBody extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(
                             'Bee TV',
-                             style: TextStyles
-                                 .font22ExtraBold(context)
-                                 .copyWith(color: Colors.white ,fontSize: 32),
+                            style: TextStyles.font22ExtraBold(
+                              context,
+                            ).copyWith(color: Colors.white, fontSize: 32),
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
                       Text(
                         'A New Experience',
-                         style: TextStyles
-                             .font22Bold(context)
-                             .copyWith(color: Colors.white),
+                        style: TextStyles.font22Bold(
+                          context,
+                        ).copyWith(color: Colors.white),
                       ),
                       const SizedBox(height: 16),
                       Text(
                         'Enjoy an extensive selection of movies, series and live TV on any device,\nwith a viewing experience designed for comfort and control.',
-                         style: TextStyles
-                             .font18Medium(context)
-                             .copyWith(color: Colors.white70, height: 1.4),
+                        style: TextStyles.font18Medium(
+                          context,
+                        ).copyWith(color: Colors.white70, height: 1.4),
                       ),
                       const SizedBox(height: 28),
                       Text(
                         'Trial Notice: Your free trial will end soon.',
-                         style: TextStyles
-                             .font14Medium(context)
-                             .copyWith(color: Colors.white70),
+                        style: TextStyles.font14Medium(
+                          context,
+                        ).copyWith(color: Colors.white70),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         'Thank you for choosing our app — enjoy your time!',
-                         style: TextStyles
-                             .font18ExtraBold(context)
-                             .copyWith(color: Colors.white),
+                        style: TextStyles.font18ExtraBold(
+                          context,
+                        ).copyWith(color: Colors.white),
                       ),
-                     SizedBox(height: 15,),
+                      SizedBox(height: 15),
                     ],
                   ),
                 ),
@@ -98,13 +99,12 @@ class StartViewBody extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      SizedBox(height: 20,),
+                      SizedBox(height: 20),
                       Text(
                         'Continue Using the App',
-                        style: TextStyles
-                            .font22ExtraBold(context)
-                            .copyWith(color: Colors.white),
+                        style: TextStyles.font22ExtraBold(
+                          context,
+                        ).copyWith(color: Colors.white),
                       ),
                       const SizedBox(height: 16),
                       _step(
@@ -120,10 +120,17 @@ class StartViewBody extends StatelessWidget {
                             'Sign in with your Device ID and Device Key to add a playlist.',
                       ),
                       const SizedBox(height: 12),
-                      _deviceInfo(context,
-                          label: 'Device ID', value: '0d:17:78:26:d4:6e'),
+                      _deviceInfo(
+                        context,
+                        label: 'Device ID',
+                        value: '0d:17:78:26:d4:6e',
+                      ),
                       const SizedBox(height: 8),
-                      _deviceInfo(context, label: 'Device Key', value: '901370'),
+                      _deviceInfo(
+                        context,
+                        label: 'Device Key',
+                        value: '901370',
+                      ),
                       const SizedBox(height: 20),
                       _step(
                         context,
@@ -140,22 +147,31 @@ class StartViewBody extends StatelessWidget {
                             style: FilledButton.styleFrom(
                               backgroundColor: Colors.transparent,
                               foregroundColor: Colors.white,
-                              side: const BorderSide(color: Colors.white, width: 2),
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 2,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
-                            onPressed: () {},
-                             child: Text(
-                               'Agree',
-                               style: TextStyles
-                                   .font18SemiBold(context)
-                                   .copyWith(color: Colors.white),
-                             ),
+                            onPressed: () {
+                              g.Get.off(
+                                () => const HomeView(),
+                                transition: g.Transition.fade,
+                                duration: const Duration(milliseconds: 400),
+                              );
+                            },
+                            child: Text(
+                              'Agree',
+                              style: TextStyles.font18SemiBold(
+                                context,
+                              ).copyWith(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 30,)
+                      SizedBox(height: 30),
                     ],
                   ),
                 ),
@@ -167,9 +183,11 @@ class StartViewBody extends StatelessWidget {
     );
   }
 
-  
-
-  Widget _step(BuildContext context, {required IconData icon, required String text}) {
+  Widget _step(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -178,16 +196,20 @@ class StartViewBody extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: TextStyles
-                .font18Medium(context)
-                .copyWith(color: Colors.white, height: 1.35),
+            style: TextStyles.font18Medium(
+              context,
+            ).copyWith(color: Colors.white, height: 1.35),
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _deviceInfo(BuildContext context, {required String label, required String value}) {
+  Widget _deviceInfo(
+    BuildContext context, {
+    required String label,
+    required String value,
+  }) {
     return Row(
       children: [
         Expanded(
@@ -202,18 +224,18 @@ class StartViewBody extends StatelessWidget {
               children: [
                 Text(
                   '$label:',
-                  style: TextStyles
-                      .font14SemiBold(context)
-                      .copyWith(color: Colors.white70),
+                  style: TextStyles.font14SemiBold(
+                    context,
+                  ).copyWith(color: Colors.white70),
                 ),
                 const SizedBox(height: 4),
                 FittedBox(
                   fit: BoxFit.scaleDown,
                   child: SelectableText(
                     value,
-                    style: TextStyles
-                        .font20ExtraBold(context)
-                        .copyWith(color: Colors.white),
+                    style: TextStyles.font20ExtraBold(
+                      context,
+                    ).copyWith(color: Colors.white),
                   ),
                 ),
               ],
@@ -225,13 +247,16 @@ class StartViewBody extends StatelessWidget {
           onPressed: () async {
             await Clipboard.setData(ClipboardData(text: value));
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            CustomSnackBar().showCustomSnackBar(context: context, message: "$label Copied", type: AnimatedSnackBarType.success);
+            CustomSnackBar().showCustomSnackBar(
+              context: context,
+              message: "$label Copied",
+              type: AnimatedSnackBarType.success,
+            );
           },
           icon: const Icon(Icons.copy, color: Colors.white),
           tooltip: 'Copy',
-        )
+        ),
       ],
     );
   }
 }
-
