@@ -8,8 +8,6 @@ import 'package:iptv/core/utils/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:iptv/featuers/home/presentation/views/widgets/custom_circle_btm.dart';
 
-
-
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
 
@@ -65,29 +63,46 @@ class _HomeViewBodyState extends State<HomeViewBody> {
             children: [
               Row(
                 children: [
-                  Row(children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryColorTheme.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(12),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryColorTheme.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset(Assets.imagesLogo, scale: 6),
+                            Text(
+                              'Bee TV',
+                              style: TextStyles.font20Bold(
+                                context,
+                              ).copyWith(color: AppColors.whiteColor),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        children: [
-                  Image.asset(Assets.imagesLogo ,scale: 6,),
-                          Text('Bee TV', style: TextStyles.font20Bold(context).copyWith(color: AppColors.whiteColor)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                  ]),
-                  const Spacer(), 
+                      const SizedBox(width: 12),
+                    ],
+                  ),
+                  const Spacer(),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(_timeText, style: TextStyles.font22ExtraBold(context).copyWith(color: AppColors.whiteColor)),
+                      Text(
+                        _timeText,
+                        style: TextStyles.font22ExtraBold(
+                          context,
+                        ).copyWith(color: AppColors.whiteColor),
+                      ),
                       const SizedBox(height: 2),
-                      Text(_dateText, style: TextStyles.font14Medium(context).copyWith(color: AppColors.subGreyColor)),
+                      Text(
+                        _dateText,
+                        style: TextStyles.font14Medium(
+                          context,
+                        ).copyWith(color: AppColors.subGreyColor),
+                      ),
                     ],
                   ),
                 ],
@@ -98,10 +113,22 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                   spacing: 36,
                   runSpacing: 28,
                   alignment: WrapAlignment.center,
-                  children:  [
-                    CircleButton(icon: Icons.tv, label: 'Live TV', onTap: (){}),
-                    CircleButton(icon: Icons.local_movies, label: 'Movies', onTap: (){}),
-                    CircleButton(icon: Icons.movie_creation_outlined, label: 'Series', onTap: (){}),
+                  children: [
+                    CircleButton(
+                      icon: Icons.tv,
+                      label: 'Live TV',
+                      onTap: () {},
+                    ),
+                    CircleButton(
+                      icon: Icons.local_movies,
+                      label: 'Movies',
+                      onTap: () {},
+                    ),
+                    CircleButton(
+                      icon: Icons.movie_creation_outlined,
+                      label: 'Series',
+                      onTap: () {},
+                    ),
                   ],
                 ),
               ),
@@ -110,28 +137,48 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.secondaryColorTheme.withOpacity(0.7),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
                       'Trial ends: Sunday, Sep 22, 2025',
-                      style: TextStyles.font14Medium(context).copyWith(color: AppColors.whiteColor),
+                      style: TextStyles.font14Medium(
+                        context,
+                      ).copyWith(color: AppColors.whiteColor),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Wrap(
                     spacing: 12,
-                    children:  [
-                      CircleAvatar( backgroundColor: AppColors.yellowColor.withOpacity(1), child: Icon(Icons.person, color: AppColors.whiteColor)),
-                      CircleAvatar(backgroundColor: AppColors.yellowColor.withOpacity(1), child: Icon(Icons.settings , color: AppColors.whiteColor)),
-                      CircleAvatar(backgroundColor: AppColors.yellowColor.withOpacity(1), child: Icon(Icons.refresh , color: AppColors.whiteColor)),
-                      CircleAvatar(backgroundColor: AppColors.yellowColor.withOpacity(1), child: Icon(Icons.logout , color: AppColors.whiteColor)),
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: AppColors.yellowColor.withOpacity(1),
+                        child: Icon(Icons.person, color: AppColors.whiteColor),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: AppColors.yellowColor.withOpacity(1),
+                        child: Icon(
+                          Icons.settings,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: AppColors.yellowColor.withOpacity(1),
+                        child: Icon(Icons.refresh, color: AppColors.whiteColor),
+                      ),
+                      CircleAvatar(
+                        backgroundColor: AppColors.yellowColor.withOpacity(1),
+                        child: Icon(Icons.logout, color: AppColors.whiteColor),
+                      ),
                     ],
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -139,4 +186,3 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     );
   }
 }
-
