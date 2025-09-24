@@ -7,6 +7,8 @@ import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:iptv/featuers/home/presentation/views/widgets/custom_circle_btm.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 
 
 
@@ -21,11 +23,14 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   late String _timeText;
   late String _dateText;
   late final Ticker _ticker;
+  String? _city;
+  String? _country;
 
   @override
   void initState() {
     super.initState();
     _updateDateTime();
+    _resolveLocation();
     _ticker = Ticker((_) {
       final DateTime now = DateTime.now();
       if (now.second == 0) {
@@ -39,6 +44,29 @@ class _HomeViewBodyState extends State<HomeViewBody> {
     _timeText = DateFormat('hh:mm a').format(now);
     _dateText = DateFormat('EEEE, MMM d, yyyy').format(now);
     if (mounted) setState(() {});
+  }
+
+  Future<void> _resolveLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+
+    final Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+    final List<geocoding.Placemark> places = await geocoding.placemarkFromCoordinates(pos.latitude, pos.longitude);
+    if (places.isNotEmpty) {
+      final geocoding.Placemark p = places.first;
+      setState(() {
+        _city = p.locality?.isNotEmpty == true ? p.locality : p.subAdministrativeArea;
+        _country = p.country;
+      });
+    }
   }
 
   @override
@@ -76,7 +104,10 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                         children: [
                           const Icon(Icons.location_on, color: AppColors.yellowColor, size: 20),
                           const SizedBox(width: 6),
-                          Text('Giza, Egypt', style: TextStyles.font14Medium(context).copyWith(color: AppColors.whiteColor)),
+                          Text(
+                            _city != null && _country != null ? '${_city}, ${_country}' : 'Locating...',
+                            style: TextStyles.font14Medium(context).copyWith(color: AppColors.whiteColor),
+                          ),
                         ],
                       ),
                     ),
