@@ -35,7 +35,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10 , vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 15 ),
         child: Stack(
           children: [
             SafeArea(
@@ -72,7 +72,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                               child: Text(
                                 e.value,
                                 style: (isSelected
-                                        ? TextStyles.font18ExtraBold(context)
+                                        ? TextStyles.font20ExtraBold(context)
                                         : TextStyles.font18Medium(context))
                                     .copyWith(
                                   color: isSelected
@@ -110,45 +110,42 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                             );
                           },
                           borderRadius: BorderRadius.circular(12),
-                          child: SizedBox(
-                            width: 100,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? Colors.white.withOpacity(0.06)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 28,
-                                    height: 28,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white10,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: const Icon(Icons.image, color: Colors.white24, size: 16),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.white.withOpacity(0.06)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white10,
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
-                                  const SizedBox(width: 16),
-                                  Text(
-                                    '${index + 1}',
+                                  alignment: Alignment.center,
+                                  child: const Icon(Icons.image, color: Colors.white24, size: 16),
+                                ),
+                                const SizedBox(width: 16),
+                                Text(
+                                  '${index + 1}',
+                                  style: TextStyles.font20Medium(context)
+                                      .copyWith(color: AppColors.whiteColor),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    _channels[index],
                                     style: TextStyles.font20Medium(context)
                                         .copyWith(color: AppColors.whiteColor),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      _channels[index],
-                                      style: TextStyles.font20Medium(context)
-                                          .copyWith(color: AppColors.whiteColor),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         );
