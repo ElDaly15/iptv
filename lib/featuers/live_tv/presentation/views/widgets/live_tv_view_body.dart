@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_styles.dart';
+import 'package:get/get.dart' as g;
+import 'package:iptv/featuers/live_tv/presentation/views/tv_player_view.dart';
 
 class LiveTvViewBody extends StatefulWidget {
   const LiveTvViewBody({super.key});
@@ -94,7 +96,18 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                     itemBuilder: (context, index) {
                       final bool isSelected = index == _selectedChannel;
                       return InkWell(
-                        onTap: () => setState(() => _selectedChannel = index),
+                        onTap: () {
+                          setState(() => _selectedChannel = index);
+                          g.Get.to(
+                            () => TvPlayerView(
+                              channelName: _channels[index],
+                              // Sample public HLS to test playback; replace with real stream per channel
+                              streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                            ),
+                            transition: g.Transition.fade,
+                            duration: const Duration(milliseconds: 300),
+                          );
+                        },
                         borderRadius: BorderRadius.circular(12),
                         child: SizedBox(
                           width: 100,
