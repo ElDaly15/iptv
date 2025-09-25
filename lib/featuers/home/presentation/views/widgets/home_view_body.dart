@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:get/get.dart' as g;
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:iptv/featuers/home/presentation/views/widgets/custom_circle_btm.dart';
+import 'package:iptv/featuers/live_tv/presentation/views/live_tv_view.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -117,7 +119,13 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     CircleButton(
                       icon: Icons.tv,
                       label: 'Live TV',
-                      onTap: () {},
+                      onTap: () {
+                        g.Get.to(
+                          () => const LiveTvView(),
+                          transition: g.Transition.fade,
+                          duration: const Duration(milliseconds: 400),
+                        );
+                      },
                     ),
                     CircleButton(
                       icon: Icons.local_movies,
