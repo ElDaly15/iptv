@@ -18,6 +18,7 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
   String? _error;
+  bool _wasFullscreen = false;
 
   @override
   void initState() {
@@ -34,13 +35,17 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
       final controller = VideoPlayerController.networkUrl(Uri.parse(url));
       await controller.initialize();
       final chewie = ChewieController(
+        
         videoPlayerController: controller,
         autoPlay: true,
         looping: true,
+        autoInitialize: true,
         allowMuting: true,
+        
         allowFullScreen: true,
         materialProgressColors: ChewieProgressColors(
           playedColor: AppColors.yellowColor,
+          
           handleColor: AppColors.whiteColor,
           backgroundColor: Colors.white24,
           bufferedColor: Colors.white38,
@@ -51,6 +56,13 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
         _videoController = controller;
         _chewieController = chewie;
       });
+      // Enter fullscreen immediately after initialization
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_chewieController == null) return;
+        _chewieController!.enterFullScreen();
+        _wasFullscreen = true;
+        _chewieController!.addListener(_handleFullscreenChange);
+      });
     } catch (e) {
       setState(() {
         _error = 'Failed to load stream';
@@ -58,8 +70,24 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
     }
   }
 
+  void _handleFullscreenChange() {
+    final controller = _chewieController;
+    if (controller == null) return;
+    final bool isFull = controller.isFullScreen;
+    if (_wasFullscreen && !isFull) {
+      // User exited fullscreen → return back
+      if (mounted) {
+        Navigator.of(context).maybePop();
+      }
+    }
+    _wasFullscreen = isFull;
+  }
+
   @override
   void dispose() {
+    // Ensure we exit fullscreen before disposing
+    _chewieController?.exitFullScreen();
+    _chewieController?.removeListener(_handleFullscreenChange);
     _chewieController?.dispose();
     _videoController?.dispose();
     super.dispose();
@@ -68,56 +96,24 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.secondaryColorTheme, AppColors.mainColorTheme],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                widget.channelName,
-                style: TextStyles.font22ExtraBold(context).copyWith(color: AppColors.whiteColor),
-              ),
-              const SizedBox(height: 16),
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Builder(
-                    builder: (context) {
-                      if (_error != null) {
-                        return Container(
-                          color: Colors.black,
-                          alignment: Alignment.center,
-                          child: Text(_error!, style: TextStyles.font14Medium(context).copyWith(color: AppColors.subGreyColor)),
-                        );
-                      }
-                      if (_chewieController == null) {
-                        return Container(
-                          color: Colors.black,
-                          alignment: Alignment.center,
-                          child: const CircularProgressIndicator(color: AppColors.yellowColor),
-                        );
-                      }
-                      return Chewie(controller: _chewieController!);
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                widget.streamUrl ?? 'Provide an HLS/DASH URL to play',
+      color: Colors.black,
+      child: Builder(
+        builder: (context) {
+          if (_error != null) {
+            return Center(
+              child: Text(
+                _error!,
                 style: TextStyles.font14Medium(context).copyWith(color: AppColors.subGreyColor),
               ),
-            ],
-          ),
-        ),
+            );
+          }
+          if (_chewieController == null) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.yellowColor),
+            );
+          }
+          return Chewie(controller: _chewieController!);
+        },
       ),
     );
   }
