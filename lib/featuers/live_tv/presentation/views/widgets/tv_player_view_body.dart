@@ -35,6 +35,7 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
       final controller = VideoPlayerController.networkUrl(Uri.parse(url));
       await controller.initialize();
       final chewie = ChewieController(
+        cupertinoProgressColors: ChewieProgressColors(playedColor: Colors.yellow , handleColor: Colors.white , backgroundColor: Colors.white ,bufferedColor: Colors.white),
         
         videoPlayerController: controller,
         autoPlay: true,
