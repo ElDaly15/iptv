@@ -4,8 +4,21 @@ import 'package:iptv/featuers/movies/presentation/views/widgets/categories_panel
 import 'package:iptv/featuers/movies/presentation/views/widgets/movies_grid.dart';
 import 'package:iptv/featuers/movies/presentation/views/widgets/top_bar.dart';
 
-class MoviesViewBody extends StatelessWidget {
+class MoviesViewBody extends StatefulWidget {
   const MoviesViewBody({super.key});
+
+  @override
+  State<MoviesViewBody> createState() => _MoviesViewBodyState();
+}
+
+class _MoviesViewBodyState extends State<MoviesViewBody> {
+  String selectedCategory = 'All';
+
+  void onCategorySelected(String category) {
+    setState(() {
+      selectedCategory = category;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +32,31 @@ class MoviesViewBody extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(onTap: (){
-                Navigator.pop(context);
-              }, child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
-              SizedBox(width: 5,),
-              SizedBox(width: size.width * 0.25, child: CategoriesPanel()),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              ),
+              const SizedBox(width: 5),
+              SizedBox(
+                width: size.width * 0.25,
+                child: CategoriesPanel(
+                  selectedCategory: selectedCategory,
+                  onCategorySelected: onCategorySelected,
+                ),
+              ),
               const SizedBox(width: 16),
               // Right side: Search + Grid
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TopBar(),
+                    const TopBar(),
                     const SizedBox(height: 16),
-                    Expanded(child: MoviesGrid()),
+                    Expanded(
+                      child: MoviesGrid(selectedCategory: selectedCategory),
+                    ),
                   ],
                 ),
               ),
