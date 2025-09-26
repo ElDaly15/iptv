@@ -42,23 +42,7 @@ class TopBar extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 12),
-        // Sort button (placeholder)
-        Container(
-          height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: AppColors.secondaryColorTheme,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-          'Sort By',
-            style: TextStyles.font14Medium(context).copyWith(
-              color: AppColors.whiteColor,
-            ),
-          ),
-        ),
+       
       ],
     );
   }
