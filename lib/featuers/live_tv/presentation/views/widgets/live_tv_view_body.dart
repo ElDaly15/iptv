@@ -35,7 +35,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15 ),
+        padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 10 ),
         child: Stack(
           children: [
             SafeArea(
