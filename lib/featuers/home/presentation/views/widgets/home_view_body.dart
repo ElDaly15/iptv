@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:iptv/featuers/home/presentation/views/widgets/custom_circle_btm.dart';
 import 'package:iptv/featuers/live_tv/presentation/views/live_tv_view.dart';
 import 'package:iptv/featuers/movies/presentation/views/movies_view.dart';
+import 'package:iptv/featuers/series/presentation/views/series_view.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -142,7 +143,13 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                     CircleButton(
                       icon: Icons.movie_creation_outlined,
                       label: 'Series',
-                      onTap: () {},
+                      onTap: () {
+                         g.Get.to(
+                          () => const SeriesView(),
+                          transition: g.Transition.fade,
+                          duration: const Duration(milliseconds: 400),
+                        );
+                      },
                     ),
                   ],
                 ),
