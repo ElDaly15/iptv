@@ -55,7 +55,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
               return 'Password at least 8 characters';
             }
           }
-          
           if (widget.isPhone &&
               !RegExp(r'^(010|011|012|015)\d{8}$').hasMatch(value)) {
             return 'Invalid phone';
