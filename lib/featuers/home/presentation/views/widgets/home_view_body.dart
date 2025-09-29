@@ -11,6 +11,7 @@ import 'package:iptv/featuers/home/presentation/views/widgets/custom_circle_btm.
 import 'package:iptv/featuers/live_tv/presentation/views/live_tv_view.dart';
 import 'package:iptv/featuers/movies/presentation/views/movies_view.dart';
 import 'package:iptv/featuers/series/presentation/views/series_view.dart';
+import 'package:iptv/featuers/settings/presentation/views/settings_view.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -178,15 +179,21 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                   Wrap(
                     spacing: 12,
                     children: [
-                      CircleAvatar(
-                        backgroundColor: AppColors.yellowColor.withOpacity(1),
-                        child: Icon(Icons.person, color: AppColors.whiteColor),
-                      ),
-                      CircleAvatar(
-                        backgroundColor: AppColors.yellowColor.withOpacity(1),
-                        child: Icon(
-                          Icons.settings,
-                          color: AppColors.whiteColor,
+                     
+                      InkWell(
+                        onTap: (){
+                          g.Get.to(
+                            () => const SettingsView(),
+                            transition: g.Transition.fade,
+                            duration: const Duration(milliseconds: 400),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.yellowColor.withOpacity(1),
+                          child: Icon(
+                            Icons.settings,
+                            color: AppColors.whiteColor,
+                          ),
                         ),
                       ),
                       CircleAvatar(
