@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:video_player/video_player.dart';
@@ -23,6 +24,11 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
   @override
   void initState() {
     super.initState();
+    // Lock orientation to landscape for this screen to avoid initial portrait flash
+    SystemChrome.setPreferredOrientations(const [
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     if (widget.streamUrl != null && widget.streamUrl!.isNotEmpty) {
       _initPlayer(widget.streamUrl!);
     } else {
@@ -43,6 +49,14 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
         allowMuting: true,
         
         allowFullScreen: true,
+        deviceOrientationsOnEnterFullScreen: const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
+        deviceOrientationsAfterFullScreen: const [
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight,
+        ],
         materialProgressColors: ChewieProgressColors(
           playedColor: AppColors.yellowColor,
           
@@ -75,7 +89,11 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
     if (controller == null) return;
     final bool isFull = controller.isFullScreen;
     if (_wasFullscreen && !isFull) {
-      // User exited fullscreen → return back
+      // Keep orientation in landscape when exiting fullscreen
+      SystemChrome.setPreferredOrientations(const [
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
       if (mounted) {
         Navigator.of(context).maybePop();
       }
@@ -85,11 +103,16 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
 
   @override
   void dispose() {
-    // Ensure we exit fullscreen before disposing
+    
     _chewieController?.exitFullScreen();
     _chewieController?.removeListener(_handleFullscreenChange);
     _chewieController?.dispose();
     _videoController?.dispose();
+    // Restore orientations for the rest of the app
+    SystemChrome.setPreferredOrientations(const [
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     super.dispose();
   }
 
