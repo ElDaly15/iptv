@@ -1,8 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iptv/core/utils/app_colors.dart';
+import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MovieCard extends StatelessWidget {
   final String title;
@@ -24,17 +27,45 @@ class MovieCard extends StatelessWidget {
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
-              child: Container(
-                color: AppColors.mainColorTheme.withOpacity(.6),
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.movie,
-                  size: 48,
-                  color: AppColors.subGreyColor,
+              child: CachedNetworkImage(
+                    placeholder: (context, url) => Skeletonizer(
+                      effect: ShimmerEffect(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        duration: const Duration(seconds: 1),
+                      ),
+                      enabled: true,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          Assets.imagesLogo,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => ClipRRect(
+                      child: Skeletonizer(
+                        effect: ShimmerEffect(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          duration: const Duration(seconds: 1),
+                        ),
+                        enabled: true,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            Assets.imagesLogo,
+                          ),
+                        ),
+                      ),
+                    ),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    imageUrl:
+                        'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQYq7Mk3_qT905pUYNwN5JfQjLJoNx6n5iqB2M9iJ5MffZmKLPklzmAUJVs7P2VgVS5gspq3Q',
+                  ),
                 ),
-              ),
             ),
-          ),
+          
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
