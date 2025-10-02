@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:iptv/core/services/device_info_service.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/featuers/settings/presentation/views/widgets/custom_settings_list_tile.dart';
 
-class PersonalInformationViewBody extends StatelessWidget {
+class PersonalInformationViewBody extends StatefulWidget {
   const PersonalInformationViewBody({super.key});
+
+  @override
+  State<PersonalInformationViewBody> createState() => _PersonalInformationViewBodyState();
+}
+
+class _PersonalInformationViewBodyState extends State<PersonalInformationViewBody> {
+  String _macAddress = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDeviceInfo();
+  }
+
+  Future<void> _loadDeviceInfo() async {
+    final deviceId = await DeviceInfoService.getDeviceId();
+    final formattedId = DeviceInfoService.formatAsMAC(deviceId);
+    setState(() {
+      _macAddress = formattedId;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +63,7 @@ class PersonalInformationViewBody extends StatelessWidget {
                 
               },icon: Icons.person_2,),
               SizedBox(height: 16,),
-              CustomSettingsListTile(title: 'Mac Address : 5d:12:00:a2:32', ontap: (){
+              CustomSettingsListTile(title: 'Mac Address : $_macAddress', ontap: (){
                 
               },icon: Icons.info,),
              

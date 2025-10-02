@@ -1,17 +1,40 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart' as g;
+import 'package:iptv/core/services/device_info_service.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/core/widgets/snack_bars/custom_snack_bar.dart';
 import 'package:iptv/featuers/home/presentation/views/home_view.dart';
 
-class StartViewBody extends StatelessWidget {
+class StartViewBody extends StatefulWidget {
   const StartViewBody({super.key});
+
+  @override
+  State<StartViewBody> createState() => _StartViewBodyState();
+}
+
+class _StartViewBodyState extends State<StartViewBody> {
+  String _deviceId = 'Loading...';
+  String _deviceKey = '901370'; // Keep the same device key
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDeviceInfo();
+  }
+
+  Future<void> _loadDeviceInfo() async {
+    final deviceId = await DeviceInfoService.getDeviceId();
+    final formattedId = DeviceInfoService.formatAsMAC(deviceId);
+    setState(() {
+      _deviceId = formattedId;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +146,13 @@ class StartViewBody extends StatelessWidget {
                       _deviceInfo(
                         context,
                         label: 'Device ID',
-                        value: '0d:17:78:26:d4:6e',
+                        value: _deviceId,
                       ),
                       const SizedBox(height: 8),
                       _deviceInfo(
                         context,
                         label: 'Device Key',
-                        value: '901370',
+                        value: _deviceKey,
                       ),
                       const SizedBox(height: 20),
                       _step(
