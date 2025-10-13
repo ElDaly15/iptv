@@ -1,14 +1,14 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
-import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:get/get.dart' as g;
-import 'package:iptv/core/services/device_info_service.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
-import 'package:iptv/core/widgets/snack_bars/custom_snack_bar.dart';
+import 'package:iptv/core/widgets/btms/custom_btm_field.dart';
+import 'package:iptv/core/widgets/fields/custom_text_field.dart';
+
 import 'package:iptv/featuers/home/presentation/views/home_view.dart';
 
 class StartViewBody extends StatefulWidget {
@@ -19,22 +19,12 @@ class StartViewBody extends StatefulWidget {
 }
 
 class _StartViewBodyState extends State<StartViewBody> {
-  String _deviceId = 'Loading...';
-  String _deviceKey = '901370'; // Keep the same device key
-
   @override
   void initState() {
     super.initState();
-    _loadDeviceInfo();
   }
-
-  Future<void> _loadDeviceInfo() async {
-    final deviceId = await DeviceInfoService.getDeviceId();
-    final formattedId = DeviceInfoService.formatAsMAC(deviceId);
-    setState(() {
-      _deviceId = formattedId;
-    });
-  }
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction;
 
   @override
   Widget build(BuildContext context) {
@@ -118,166 +108,64 @@ class _StartViewBodyState extends State<StartViewBody> {
                 padding: const EdgeInsets.symmetric(horizontal: 28.0),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 560),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20),
-                      Text(
-                        'Continue Using the App',
-                        style: TextStyles.font22ExtraBold(
-                          context,
-                        ).copyWith(color: Colors.white),
-                      ),
-                      const SizedBox(height: 16),
-                      _step(
-                        context,
-                        icon: Icons.public,
-                        text: 'Visit: https://beeplayer1.com',
-                      ),
-                      const SizedBox(height: 8),
-                      _step(
-                        context,
-                        icon: Icons.login,
-                        text:
-                            'Sign in with your Device ID and Device Key to add a playlist.',
-                      ),
-                      const SizedBox(height: 12),
-                      _deviceInfo(
-                        context,
-                        label: 'Device ID',
-                        value: _deviceId,
-                      ),
-                      const SizedBox(height: 8),
-                      _deviceInfo(
-                        context,
-                        label: 'Device Key',
-                        value: _deviceKey,
-                      ),
-                      const SizedBox(height: 20),
-                      _step(
-                        context,
-                        icon: Icons.playlist_add_check,
-                        text:
-                            'Add your favorite playlist, then restart the app to enjoy updates.',
-                      ),
-                      const SizedBox(height: 12),
-                      Center(
-                        child: SizedBox(
-                          width: 280,
-                          height: 54,
-                          child: FilledButton(
-                            style: FilledButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              foregroundColor: Colors.white,
-                              side: const BorderSide(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            onPressed: () {
-                              g.Get.off(
-                                () => const HomeView(),
-                                transition: g.Transition.fade,
-                                duration: const Duration(milliseconds: 400),
-                              );
-                            },
-                            child: Text(
-                              'Agree',
-                              style: TextStyles.font18SemiBold(
-                                context,
-                              ).copyWith(color: Colors.white),
-                            ),
-                          ),
+                  child: Form(
+                    key: _formKey,
+                    autovalidateMode: autovalidateMode,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20),
+                        Text(
+                          'Continue Using the App',
+                          style: TextStyles.font22ExtraBold(
+                            context,
+                          ).copyWith(color: Colors.white),
                         ),
-                      ),
-                      SizedBox(height: 30),
-                    ],
+                        const SizedBox(height: 16),
+                        CustomTextField(
+                          onChanged: (value) {},
+                          hintText: 'User Name',
+                          isPassword: false,
+                          obscureText: false,
+                          isInLogin: false,
+                        ),
+                        const SizedBox(height: 16),
+                        CustomTextField(
+                          onChanged: (value) {},
+                          hintText: 'Password',
+                          isPassword: true,
+                          obscureText: true,
+                          isInLogin: false,
+                        ),
+                        const SizedBox(height: 16),
+                        BigElevatedBtm(
+                          onPressed: () {
+                           if(_formKey.currentState!.validate()){
+
+                            g.Get.off(
+                              () => const HomeView(),
+                              transition: g.Transition.fade,
+                              duration: const Duration(milliseconds: 400),
+                            );
+                           }
+                           else{
+                            setState(() {
+                              autovalidateMode = AutovalidateMode.always;
+                            });
+                           }
+                          },
+                          title: 'Continue',
+                        ),
+                    
+                        SizedBox(height: 30),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _step(
-    BuildContext context, {
-    required IconData icon,
-    required String text,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, color: Colors.white, size: 22),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyles.font18Medium(
-              context,
-            ).copyWith(color: Colors.white, height: 1.35),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _deviceInfo(
-    BuildContext context, {
-    required String label,
-    required String value,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white10,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$label:',
-                  style: TextStyles.font14SemiBold(
-                    context,
-                  ).copyWith(color: Colors.white70),
-                ),
-                const SizedBox(height: 4),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: SelectableText(
-                    value,
-                    style: TextStyles.font20ExtraBold(
-                      context,
-                    ).copyWith(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        IconButton(
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: value));
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            CustomSnackBar().showCustomSnackBar(
-              context: context,
-              message: "$label Copied",
-              type: AnimatedSnackBarType.success,
-            );
-          },
-          icon: const Icon(Icons.copy, color: Colors.white),
-          tooltip: 'Copy',
         ),
       ],
     );
