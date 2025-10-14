@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart' as g;
+import 'package:iptv/core/services/secure_storage.dart';
 import 'package:iptv/core/utils/app_images.dart';
+import 'package:iptv/featuers/home/presentation/views/home_view.dart';
 import 'package:iptv/featuers/start/presentation/views/start_view.dart';
 
 class SplashViewBody extends StatefulWidget {
@@ -46,12 +48,17 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
     _animationController.forward();
 
-    Future.delayed(const Duration(milliseconds: 3500), () {
-      // Replace splash with next screen, keep portrait during transition
-      g.Get.off(() => const StartView(),
+    Future.delayed(const Duration(milliseconds: 3500), () async {
+      String? token =await getToken();
+      if(token != null){
+        g.Get.off(() => const HomeView(),
+          transition: g.Transition.fade,
+          duration: const Duration(milliseconds: 400));
+      }else{
+        g.Get.off(() => const StartView(),
         transition: g.Transition.fade,
         duration: const Duration(milliseconds: 400));
-    });
+    }});
   }
 
   @override

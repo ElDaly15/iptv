@@ -24,6 +24,7 @@ class BigElevatedBtm extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          disabledBackgroundColor: isLoading ? AppColors.yellowColor : null,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 side: BorderSide(

@@ -3,6 +3,7 @@ import 'package:iptv/core/errors/exceptions.dart';
 import 'package:iptv/core/errors/failuer.dart';
 import 'package:iptv/core/services/api/api_consumer.dart';
 import 'package:iptv/core/services/api/endpoints.dart';
+import 'package:iptv/core/services/secure_storage.dart';
 import 'package:iptv/featuers/start/data/models/user_data_model.dart';
 import 'package:iptv/featuers/start/data/repos/auth_repo/auth_repo.dart';
 
@@ -21,6 +22,8 @@ class AuthRepoImpl extends AuthRepo {
         Endpoints.login,
         body: {'username': username, 'password': password},
       );
+            await saveToken(response['access_token']);
+
       return Right(UserDataModel.fromJson(response));
     } on ServerError catch (e) {
       return Left(Failuer(e.errorModel.errorMsg));

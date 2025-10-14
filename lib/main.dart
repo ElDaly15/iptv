@@ -2,19 +2,24 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:iptv/featuers/splash/presentation/views/splash_view.dart';
+import 'package:iptv/featuers/start/presentation/manager/auth_cubit/auth_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   // Ensure app starts in portrait for the splash screen
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
-  runApp(DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => const MyApp(),
-  ));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => BlocProvider(
+        create: (context) => AuthCubit(),
+        child: const MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

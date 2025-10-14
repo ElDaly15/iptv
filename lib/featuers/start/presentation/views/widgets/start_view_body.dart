@@ -1,6 +1,8 @@
 // ignore_for_file: use_build_context_synchronously, prefer_final_fields
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:get/get.dart' as g;
 import 'package:iptv/core/utils/app_colors.dart';
@@ -8,8 +10,10 @@ import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/core/widgets/btms/custom_btm_field.dart';
 import 'package:iptv/core/widgets/fields/custom_text_field.dart';
+import 'package:iptv/core/widgets/snack_bars/custom_snack_bar.dart';
 
 import 'package:iptv/featuers/home/presentation/views/home_view.dart';
+import 'package:iptv/featuers/start/presentation/manager/auth_cubit/auth_cubit.dart';
 
 class StartViewBody extends StatefulWidget {
   const StartViewBody({super.key});
@@ -23,8 +27,10 @@ class _StartViewBodyState extends State<StartViewBody> {
   void initState() {
     super.initState();
   }
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   AutovalidateMode autovalidateMode = AutovalidateMode.onUserInteraction;
+  String? username, password;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +130,9 @@ class _StartViewBodyState extends State<StartViewBody> {
                         ),
                         const SizedBox(height: 16),
                         CustomTextField(
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            username = value;
+                          },
                           hintText: 'User Name',
                           isPassword: false,
                           obscureText: false,
@@ -132,32 +140,48 @@ class _StartViewBodyState extends State<StartViewBody> {
                         ),
                         const SizedBox(height: 16),
                         CustomTextField(
-                          onChanged: (value) {},
+                          onChanged: (value) {
+                            password = value;
+                          },
                           hintText: 'Password',
                           isPassword: true,
                           obscureText: true,
                           isInLogin: false,
                         ),
                         const SizedBox(height: 16),
-                        BigElevatedBtm(
-                          onPressed: () {
-                           if(_formKey.currentState!.validate()){
-
-                            g.Get.off(
-                              () => const HomeView(),
-                              transition: g.Transition.fade,
-                              duration: const Duration(milliseconds: 400),
-                            );
-                           }
-                           else{
-                            setState(() {
-                              autovalidateMode = AutovalidateMode.always;
-                            });
-                           }
+                        BlocConsumer<AuthCubit, AuthState>(
+                          listener: (context, state) {
+                            if(state is AuthSuccess){
+                              g.Get.off(
+                                () => const HomeView(),
+                                transition: g.Transition.fade,
+                                duration: const Duration(milliseconds: 400),
+                              );
+                            }
+                            if(state is AuthError){
+                              CustomSnackBar().showCustomSnackBar(context: context, message: state.error, type: AnimatedSnackBarType.error);
+                            }
                           },
-                          title: 'Continue',
+                          builder: (context, state) {
+                            return BigElevatedBtm(
+                              isLoading: state is AuthLoading,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<AuthCubit>().login(
+                                    username!,
+                                    password!,
+                                  );
+                                } else {
+                                  setState(() {
+                                    autovalidateMode = AutovalidateMode.always;
+                                  });
+                                }
+                              },
+                              title: 'Continue',
+                            );
+                          },
                         ),
-                    
+
                         SizedBox(height: 30),
                       ],
                     ),
