@@ -12,8 +12,8 @@ class ErrorModel {
 
   factory ErrorModel.jsonData(dynamic jsonData) {
     return ErrorModel(
-      statusCode: jsonData['status'] ?? 0,
-      code: jsonData['code'] ?? 'UNKNOWN_CODE',
+      statusCode: jsonData['statusCode'] ?? 0,
+      code: jsonData['error'] ?? 'UNKNOWN_CODE',
       errorMsg: jsonData['message'] ?? 'An unknown error occurred',
     );
   }
