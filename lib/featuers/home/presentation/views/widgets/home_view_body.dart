@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart' as g;
+import 'package:iptv/core/services/secure_storage.dart';
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:iptv/core/utils/app_colors.dart';
@@ -12,6 +13,7 @@ import 'package:iptv/featuers/live_tv/presentation/views/live_tv_view.dart';
 import 'package:iptv/featuers/movies/presentation/views/movies_view.dart';
 import 'package:iptv/featuers/series/presentation/views/series_view.dart';
 import 'package:iptv/featuers/settings/presentation/views/settings_view.dart';
+import 'package:iptv/featuers/start/presentation/views/start_view.dart';
 
 class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
@@ -200,9 +202,19 @@ class _HomeViewBodyState extends State<HomeViewBody> {
                         backgroundColor: AppColors.yellowColor.withOpacity(1),
                         child: Icon(Icons.refresh, color: AppColors.whiteColor),
                       ),
-                      CircleAvatar(
-                        backgroundColor: AppColors.yellowColor.withOpacity(1),
-                        child: Icon(Icons.logout, color: AppColors.whiteColor),
+                      InkWell(
+                        onTap: ()async{
+                          await deleteToken();
+                          g.Get.off(
+                            () => const StartView(),
+                            transition: g.Transition.fade,
+                            duration: const Duration(milliseconds: 400),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.yellowColor.withOpacity(1),
+                          child: Icon(Icons.logout, color: AppColors.whiteColor),
+                        ),
                       ),
                     ],
                   ),
