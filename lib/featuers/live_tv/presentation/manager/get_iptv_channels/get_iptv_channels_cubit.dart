@@ -9,6 +9,12 @@ part 'get_iptv_channels_state.dart';
 
 class GetIptvChannelsCubit extends Cubit<GetIptvChannelsState> {
   GetIptvChannelsCubit() : super(GetIptvChannelsInitial());
+  void reset() {
+    emit(GetIptvChannelsInitial());
+  }
+  void setLoading() {
+    emit(GetIptvChannelsLoading());
+  }
   void getIptvChannels(String categoryId) async {
     emit(GetIptvChannelsLoading());
     var response = await IptvLiveRepoImpl().getIptvChannels(categoryId);
