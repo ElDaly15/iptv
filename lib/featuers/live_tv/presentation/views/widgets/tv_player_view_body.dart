@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_styles.dart';
@@ -29,6 +30,7 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    print(widget.streamUrl);
     if (widget.streamUrl != null && widget.streamUrl!.isNotEmpty) {
       _initPlayer(widget.streamUrl!);
     } else {
@@ -38,15 +40,43 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
 
   Future<void> _initPlayer(String url) async {
     try {
-      final controller = VideoPlayerController.networkUrl(Uri.parse(url));
-      await controller.initialize();
+      final bool isHls = url.toLowerCase().contains('.m3u8');
+      final controller = isHls
+          ? VideoPlayerController.networkUrl(
+              Uri.parse(url),
+              formatHint: VideoFormat.hls,
+            )
+          : VideoPlayerController.networkUrl(Uri.parse(url));
+      controller.addListener(() {
+        final value = controller.value;
+        if (value.hasError && mounted) {
+          setState(() {
+            print(value.errorDescription);
+            _error = value.errorDescription ?? 'Failed to load stream';
+          });
+        }
+      });
+      await controller.initialize().timeout(const Duration(seconds: 12));
       final chewie = ChewieController(
         cupertinoProgressColors: ChewieProgressColors(playedColor: Colors.yellow , handleColor: Colors.white , backgroundColor: Colors.white ,bufferedColor: Colors.white),
         videoPlayerController: controller,
         autoPlay: true,
-        looping: true,
+        // Live streams should not loop
+        looping: isHls ? false : true,
         autoInitialize: true,
         allowMuting: true,
+        // Optimize UI for live HLS streams
+        isLive: isHls,
+        errorBuilder: (context, message) {
+          print(message);
+          return Center(
+            child: Text(
+              _error ?? 'Failed to load stream',
+              style: TextStyles.font14Medium(context).copyWith(color: AppColors.subGreyColor),
+              textAlign: TextAlign.center,
+            ),
+          );
+        },
         
         allowFullScreen: true,
         deviceOrientationsOnEnterFullScreen: const [
@@ -76,6 +106,10 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
         _chewieController!.enterFullScreen();
         _wasFullscreen = true;
         _chewieController!.addListener(_handleFullscreenChange);
+      });
+    } on TimeoutException {
+      setState(() {
+        _error = 'Failed to load stream';
       });
     } catch (e) {
       setState(() {

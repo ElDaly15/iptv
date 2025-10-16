@@ -161,22 +161,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondaryColorTheme.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      'Trial ends: Sunday, Sep 22, 2025',
-                      style: TextStyles.font14Medium(
-                        context,
-                      ).copyWith(color: AppColors.whiteColor),
-                    ),
-                  ),
+                 
                   const SizedBox(width: 16),
                   Wrap(
                     spacing: 12,
