@@ -1,8 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iptv/core/utils/app_colors.dart';
+import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:get/get.dart' as g;
 import 'package:iptv/featuers/live_tv/presentation/views/tv_player_view.dart';
@@ -20,7 +22,15 @@ class LiveTvViewBody extends StatefulWidget {
 }
 
 class _LiveTvViewBodyState extends State<LiveTvViewBody> {
-  List<String> fakeCategories = ['Faviourte', 'Recents' , 'Recents','Recents','Recents','Recents','Recents'];
+  List<String> fakeCategories = [
+    'Faviourte',
+    'Recents',
+    'Recents',
+    'Recents',
+    'Recents',
+    'Recents',
+    'Recents',
+  ];
   int _selectedCategory = 0;
   int _selectedChannel = 0;
   String? _lastLoadedCategoryId; // track to avoid duplicate fetch in build
@@ -34,7 +44,6 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
     context.read<GetIptvCategoriesCubit>().getIptvCategories();
     // Ensure channels state shows loading (or initial) on page entry
     context.read<GetIptvChannelsCubit>().setLoading();
-    
   }
 
   @override
@@ -48,7 +57,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 10 ),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Stack(
           children: [
             SafeArea(
@@ -57,20 +66,27 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                 children: [
                   // Left categories
                   SizedBox(
-                    width:220,
+                    width: 220,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            InkWell(onTap: (){
-                              Navigator.pop(context);
-                            },child: Icon(Icons.arrow_back_ios,color: Colors.white,)),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ),
+                            ),
                             Expanded(
                               child: Text(
                                 'Live Channels',
-                                style: TextStyles.font22ExtraBold(context)
-                                    .copyWith(color: AppColors.whiteColor),
+                                style: TextStyles.font22ExtraBold(
+                                  context,
+                                ).copyWith(color: AppColors.whiteColor),
                               ),
                             ),
                           ],
@@ -80,54 +96,70 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                           child: BlocBuilder<GetIptvCategoriesCubit, GetIptvCategoriesState>(
                             builder: (context, state) {
                               if (state is GetIptvCategoriesLoading) {
-                                  return Skeletonizer(
-                                       effect: ShimmerEffect(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    duration: const Duration(seconds: 1),
-                  ),
-                                    enabled: true,
-                                    child: ListView.builder(
+                                return Skeletonizer(
+                                  effect: ShimmerEffect(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    duration: const Duration(seconds: 1),
+                                  ),
+                                  enabled: true,
+                                  child: ListView.builder(
                                     itemCount: fakeCategories.length,
                                     itemBuilder: (context, index) {
-                                      final bool isSelected = index == _selectedCategory;
+                                      final bool isSelected =
+                                          index == _selectedCategory;
                                       final name = fakeCategories[index];
                                       return Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0,
+                                        ),
                                         child: GestureDetector(
-                                          onTap: () => setState(() => _selectedCategory = index),
+                                          onTap: () => setState(
+                                            () => _selectedCategory = index,
+                                          ),
                                           child: Text(
                                             name,
-                                            style: (isSelected
-                                                    ? TextStyles.font20ExtraBold(context)
-                                                    : TextStyles.font18Medium(context))
-                                                .copyWith(
-                                              color: isSelected
-                                                  ? AppColors.whiteColor
-                                                  : AppColors.subGreyColor,
-                                            ),
+                                            style:
+                                                (isSelected
+                                                        ? TextStyles.font20ExtraBold(
+                                                            context,
+                                                          )
+                                                        : TextStyles.font18Medium(
+                                                            context,
+                                                          ))
+                                                    .copyWith(
+                                                      color: isSelected
+                                                          ? AppColors.whiteColor
+                                                          : AppColors
+                                                                .subGreyColor,
+                                                    ),
                                           ),
                                         ),
                                       );
                                     },
-                                                                    ),
-                                  );
+                                  ),
+                                );
                               }
                               if (state is GetIptvCategoriesError) {
                                 return Center(
                                   child: Text(
                                     state.error,
-                                    style: TextStyles.font18Medium(context).copyWith(color: AppColors.subGreyColor),
+                                    style: TextStyles.font18Medium(
+                                      context,
+                                    ).copyWith(color: AppColors.subGreyColor),
                                   ),
                                 );
                               }
                               if (state is GetIptvCategoriesSuccess) {
-                                final categories = state.iptvCategoriesResponse.categories;
+                                final categories =
+                                    state.iptvCategoriesResponse.categories;
                                 if (categories.isEmpty) {
                                   return Center(
                                     child: Text(
                                       'No categories',
-                                      style: TextStyles.font18Medium(context).copyWith(color: AppColors.subGreyColor),
+                                      style: TextStyles.font18Medium(
+                                        context,
+                                      ).copyWith(color: AppColors.subGreyColor),
                                     ),
                                   );
                                 }
@@ -136,41 +168,59 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                   _selectedCategory = 0;
                                 }
                                 // Trigger initial/changed category channels load exactly once per category id
-                                final currentCategoryId = categories[_selectedCategory].id;
-                                if (_lastLoadedCategoryId != currentCategoryId) {
+                                final currentCategoryId =
+                                    categories[_selectedCategory].id;
+                                if (_lastLoadedCategoryId !=
+                                    currentCategoryId) {
                                   _lastLoadedCategoryId = currentCategoryId;
-                                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                                    context.read<GetIptvChannelsCubit>().getIptvChannels(currentCategoryId);
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) {
+                                    context
+                                        .read<GetIptvChannelsCubit>()
+                                        .getIptvChannels(currentCategoryId);
                                   });
                                 }
                                 return ListView.builder(
                                   itemCount: categories.length,
                                   itemBuilder: (context, index) {
-                                    final bool isSelected = index == _selectedCategory;
+                                    final bool isSelected =
+                                        index == _selectedCategory;
                                     final name = categories[index].name;
-                                    
+
                                     return Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0,
+                                      ),
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
                                             _selectedCategory = index;
                                             _selectedChannel = 0;
                                           });
-                                          final selectedId = categories[index].id;
-                                          context.read<GetIptvChannelsCubit>().getIptvChannels(selectedId);
+                                          final selectedId =
+                                              categories[index].id;
+                                          context
+                                              .read<GetIptvChannelsCubit>()
+                                              .getIptvChannels(selectedId);
                                           _lastLoadedCategoryId = selectedId;
                                         },
                                         child: Text(
                                           name.isEmpty ? 'Unnamed' : name,
-                                          style: (isSelected
-                                                  ? TextStyles.font20ExtraBold(context)
-                                                  : TextStyles.font18Medium(context))
-                                              .copyWith(
-                                            color: isSelected
-                                                ? AppColors.whiteColor
-                                                : AppColors.subGreyColor,
-                                          ),
+                                          style:
+                                              (isSelected
+                                                      ? TextStyles.font20ExtraBold(
+                                                          context,
+                                                        )
+                                                      : TextStyles.font18Medium(
+                                                          context,
+                                                        ))
+                                                  .copyWith(
+                                                    color: isSelected
+                                                        ? AppColors.whiteColor
+                                                        : AppColors
+                                                              .subGreyColor,
+                                                  ),
                                         ),
                                       ),
                                     );
@@ -185,9 +235,9 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                       ],
                     ),
                   ),
-                    
+
                   const SizedBox(width: 10),
-                    
+
                   // Middle channels list
                   Expanded(
                     child: BlocBuilder<GetIptvChannelsCubit, GetIptvChannelsState>(
@@ -202,10 +252,14 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                             enabled: true,
                             child: ListView.separated(
                               itemCount: 10,
-                              separatorBuilder: (_, __) => const SizedBox(height: 16),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 16),
                               itemBuilder: (context, index) {
                                 return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.06),
                                     borderRadius: BorderRadius.circular(12),
@@ -218,23 +272,34 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                         height: 28,
                                         decoration: BoxDecoration(
                                           color: Colors.white10,
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
                                         ),
                                         alignment: Alignment.center,
-                                        child: const Icon(Icons.image, color: Colors.white24, size: 16),
+                                        child: const Icon(
+                                          Icons.image,
+                                          color: Colors.white24,
+                                          size: 16,
+                                        ),
                                       ),
                                       const SizedBox(width: 16),
                                       Text(
                                         '${index + 1}',
-                                        style: TextStyles.font20Medium(context)
-                                            .copyWith(color: AppColors.whiteColor),
+                                        style: TextStyles.font20Medium(
+                                          context,
+                                        ).copyWith(color: AppColors.whiteColor),
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
                                         child: Text(
                                           'Channel ${index + 1}',
-                                          style: TextStyles.font20Medium(context)
-                                              .copyWith(color: AppColors.whiteColor),
+                                          style:
+                                              TextStyles.font20Medium(
+                                                context,
+                                              ).copyWith(
+                                                color: AppColors.whiteColor,
+                                              ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
@@ -250,17 +315,22 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                           return Center(
                             child: Text(
                               state.error,
-                              style: TextStyles.font18Medium(context).copyWith(color: AppColors.subGreyColor),
+                              style: TextStyles.font18Medium(
+                                context,
+                              ).copyWith(color: AppColors.subGreyColor),
                             ),
                           );
                         }
                         if (state is GetIptvChannelsSuccess) {
-                          final List<IptvChannel> channels = state.iptvChannelsResponse.channels;
+                          final List<IptvChannel> channels =
+                              state.iptvChannelsResponse.channels;
                           if (channels.isEmpty) {
                             return Center(
                               child: Text(
                                 'No channels',
-                                style: TextStyles.font18Medium(context).copyWith(color: AppColors.subGreyColor),
+                                style: TextStyles.font18Medium(
+                                  context,
+                                ).copyWith(color: AppColors.subGreyColor),
                               ),
                             );
                           }
@@ -269,7 +339,8 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                           }
                           return ListView.separated(
                             itemCount: channels.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 16),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 16),
                             itemBuilder: (context, index) {
                               final bool isSelected = index == _selectedChannel;
                               final channel = channels[index];
@@ -278,7 +349,9 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                   setState(() => _selectedChannel = index);
                                   g.Get.to(
                                     () => TvPlayerView(
-                                      channelName: channel.name.isEmpty ? 'Channel ${index + 1}' : channel.name,
+                                      channelName: channel.name.isEmpty
+                                          ? 'Channel ${index + 1}'
+                                          : channel.name,
                                       streamUrl: channel.streamUrl.isNotEmpty
                                           ? 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
                                           : channel.originalData.directSource,
@@ -290,7 +363,10 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                 },
                                 borderRadius: BorderRadius.circular(12),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? Colors.white.withOpacity(0.06)
@@ -300,28 +376,72 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Container(
+                                      CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            Skeletonizer(
+                                              effect: ShimmerEffect(
+                                                baseColor: Colors.grey[300]!,
+                                                highlightColor:
+                                                    Colors.grey[100]!,
+                                                duration: const Duration(
+                                                  seconds: 1,
+                                                ),
+                                              ),
+                                              enabled: true,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                child: Image.asset(
+                                                  Assets.imagesLogo,
+                                                ),
+                                              ),
+                                            ),
+                                        errorWidget: (context, url, error) =>
+                                            ClipRRect(
+                                              child: Skeletonizer(
+                                                effect: ShimmerEffect(
+                                                  baseColor: Colors.grey[300]!,
+                                                  highlightColor:
+                                                      Colors.grey[100]!,
+                                                  duration: const Duration(
+                                                    seconds: 1,
+                                                  ),
+                                                ),
+                                                enabled: true,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  child: Image.asset(
+                                                    Assets.imagesLogo,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                         width: 28,
                                         height: 28,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white10,
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: const Icon(Icons.image, color: Colors.white24, size: 16),
+                                        fit: BoxFit.fill,
+                                        imageUrl:
+                                            channel.originalData.streamIcon,
                                       ),
                                       const SizedBox(width: 16),
                                       Text(
                                         '${index + 1}',
-                                        style: TextStyles.font20Medium(context)
-                                            .copyWith(color: AppColors.whiteColor),
+                                        style: TextStyles.font20Medium(
+                                          context,
+                                        ).copyWith(color: AppColors.whiteColor),
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
                                         child: Text(
-                                          channel.name.isEmpty ? 'Channel ${index + 1}' : channel.name,
-                                          style: TextStyles.font20Medium(context)
-                                              .copyWith(color: AppColors.whiteColor),
+                                          channel.name.isEmpty
+                                              ? 'Channel ${index + 1}'
+                                              : channel.name,
+                                          style:
+                                              TextStyles.font20Medium(
+                                                context,
+                                              ).copyWith(
+                                                color: AppColors.whiteColor,
+                                              ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 1,
                                         ),
@@ -334,68 +454,74 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                           );
                         }
                         // initial state
-                         return Skeletonizer(
-                            effect: ShimmerEffect(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              duration: const Duration(seconds: 1),
-                            ),
-                            enabled: true,
-                            child: ListView.separated(
-                              itemCount: 10,
-                              separatorBuilder: (_, __) => const SizedBox(height: 16),
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.06),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 28,
-                                        height: 28,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white10,
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: const Icon(Icons.image, color: Colors.white24, size: 16),
+                        return Skeletonizer(
+                          effect: ShimmerEffect(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            duration: const Duration(seconds: 1),
+                          ),
+                          enabled: true,
+                          child: ListView.separated(
+                            itemCount: 10,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 16),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.06),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 28,
+                                      height: 28,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white10,
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
-                                      const SizedBox(width: 16),
-                                      Text(
-                                        '${index + 1}',
-                                        style: TextStyles.font20Medium(context)
-                                            .copyWith(color: AppColors.whiteColor),
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.image,
+                                        color: Colors.white24,
+                                        size: 16,
                                       ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Channel ${index + 1}',
-                                          style: TextStyles.font20Medium(context)
-                                              .copyWith(color: AppColors.whiteColor),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      '${index + 1}',
+                                      style: TextStyles.font20Medium(
+                                        context,
+                                      ).copyWith(color: AppColors.whiteColor),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        'Channel ${index + 1}',
+                                        style: TextStyles.font20Medium(
+                                          context,
+                                        ).copyWith(color: AppColors.whiteColor),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
                       },
                     ),
                   ),
-                 
-                      
                 ],
               ),
             ),
-      
-           
           ],
         ),
       ),
