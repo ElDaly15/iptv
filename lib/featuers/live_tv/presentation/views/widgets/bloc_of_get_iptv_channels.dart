@@ -7,6 +7,7 @@ import 'package:get/get.dart' as g;
 import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_images.dart';
 import 'package:iptv/core/utils/app_styles.dart';
+import 'package:iptv/core/widgets/loading_widgets/custom_loading_iptv_channels_list_view.dart';
 import 'package:iptv/featuers/live_tv/data/models/iptv_channel_model.dart';
 import 'package:iptv/featuers/live_tv/presentation/manager/get_iptv_channels/get_iptv_channels_cubit.dart';
 import 'package:iptv/featuers/live_tv/presentation/views/tv_player_view.dart';
@@ -27,73 +28,7 @@ class _BlocOfGetIptvChannelsState extends State<BlocOfGetIptvChannels> {
                     child: BlocBuilder<GetIptvChannelsCubit, GetIptvChannelsState>(
                       builder: (context, state) {
                         if (state is GetIptvChannelsLoading || state is GetIptvChannelsError) {
-                          return Skeletonizer(
-                            effect: ShimmerEffect(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              duration: const Duration(seconds: 1),
-                            ),
-                            enabled: true,
-                            child: ListView.separated(
-                              itemCount: 10,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 16),
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.06),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 28,
-                                        height: 28,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white10,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: const Icon(
-                                          Icons.image,
-                                          color: Colors.white24,
-                                          size: 16,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Text(
-                                        '${index + 1}',
-                                        style: TextStyles.font20Medium(
-                                          context,
-                                        ).copyWith(color: AppColors.whiteColor),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Channel ${index + 1}',
-                                          style:
-                                              TextStyles.font20Medium(
-                                                context,
-                                              ).copyWith(
-                                                color: AppColors.whiteColor,
-                                              ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          );
+                       return CustomLoadingIptvChannelsListView();
                         }
                        
                         if (state is GetIptvChannelsSuccess) {
@@ -229,68 +164,7 @@ class _BlocOfGetIptvChannelsState extends State<BlocOfGetIptvChannels> {
                           );
                         }
                         // initial state
-                        return Skeletonizer(
-                          effect: ShimmerEffect(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            duration: const Duration(seconds: 1),
-                          ),
-                          enabled: true,
-                          child: ListView.separated(
-                            itemCount: 10,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 16),
-                            itemBuilder: (context, index) {
-                              return Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.06),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 28,
-                                      height: 28,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white10,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: const Icon(
-                                        Icons.image,
-                                        color: Colors.white24,
-                                        size: 16,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Text(
-                                      '${index + 1}',
-                                      style: TextStyles.font20Medium(
-                                        context,
-                                      ).copyWith(color: AppColors.whiteColor),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        'Channel ${index + 1}',
-                                        style: TextStyles.font20Medium(
-                                          context,
-                                        ).copyWith(color: AppColors.whiteColor),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        );
+                      return  CustomLoadingIptvChannelsListView();
                       },
                     ),
                   );

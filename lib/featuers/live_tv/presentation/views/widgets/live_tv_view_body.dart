@@ -20,10 +20,6 @@ class LiveTvViewBody extends StatefulWidget {
 }
 
 class _LiveTvViewBodyState extends State<LiveTvViewBody> {
- 
-
-
-
   String get timeText => DateFormat('hh:mm a').format(DateTime.now());
 
   @override
@@ -86,10 +82,14 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                     ),
                   ),
 
-                  VerticalDivider(color: AppColors.whiteColor, thickness: 0.3, width: 1),
+                  VerticalDivider(
+                    color: AppColors.whiteColor,
+                    thickness: 0.3,
+                    width: 1,
+                  ),
                   const SizedBox(width: 10),
                   // Middle channels list
-                 BlocOfGetIptvChannels(),
+                  BlocOfGetIptvChannels(),
                 ],
               ),
             ),

@@ -30,7 +30,7 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    print(widget.streamUrl);
+  
     if (widget.streamUrl != null && widget.streamUrl!.isNotEmpty) {
       _initPlayer(widget.streamUrl!, widget.isLive);
     } else {
