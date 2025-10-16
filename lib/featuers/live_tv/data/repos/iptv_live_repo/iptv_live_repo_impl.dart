@@ -6,6 +6,7 @@ import 'package:iptv/core/services/api/dio_consumer.dart';
 import 'package:iptv/core/services/api/endpoints.dart';
 import 'package:iptv/core/services/secure_storage.dart';
 import 'package:iptv/featuers/live_tv/data/models/iptv_channel_category_model.dart';
+import 'package:iptv/featuers/live_tv/data/models/iptv_channel_model.dart';
 import 'package:iptv/featuers/live_tv/data/repos/iptv_live_repo/iptv_live_repo.dart';
 
 class IptvLiveRepoImpl extends IptvLiveRepo {
@@ -22,6 +23,19 @@ class IptvLiveRepoImpl extends IptvLiveRepo {
       
     } catch (e) {
      
+      return Left(Failuer('An unknown error occurred'));
+    }
+  }
+
+  @override
+  Future<Either<Failuer, IptvChannelsResponse>> getIptvChannels(String categoryId) async {
+    try {
+      var playlistId = await getPlaylistId();
+      final response = await DioConsumer(dio: Dio()).get(Endpoints.getIptvChannels(categoryId, playlistId!));
+      return Right(IptvChannelsResponse.fromJson(response));
+    } on ServerError catch (e) {
+      return Left(Failuer(e.errorModel.errorMsg));
+    } catch (e) {
       return Left(Failuer('An unknown error occurred'));
     }
   }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:iptv/featuers/live_tv/presentation/manager/get_iptv_categories/get_iptv_categories_cubit.dart';
+import 'package:iptv/featuers/live_tv/presentation/manager/get_iptv_channels/get_iptv_channels_cubit.dart';
 import 'package:iptv/featuers/splash/presentation/views/splash_view.dart';
 import 'package:iptv/featuers/start/presentation/manager/auth_cubit/auth_cubit.dart';
 
@@ -19,6 +20,7 @@ void main() async {
         providers: [
           BlocProvider(create: (context) => AuthCubit()),
           BlocProvider(create: (context) => GetIptvCategoriesCubit()),
+          BlocProvider(create: (context) => GetIptvChannelsCubit()),
         ],
         child: const MyApp(),
       ),
