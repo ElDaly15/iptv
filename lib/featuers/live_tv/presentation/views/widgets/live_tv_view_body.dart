@@ -95,7 +95,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                         Expanded(
                           child: BlocBuilder<GetIptvCategoriesCubit, GetIptvCategoriesState>(
                             builder: (context, state) {
-                              if (state is GetIptvCategoriesLoading) {
+                              if (state is GetIptvCategoriesLoading || state is GetIptvCategoriesError) {
                                 return Skeletonizer(
                                   effect: ShimmerEffect(
                                     baseColor: Colors.grey[300]!,
@@ -140,16 +140,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                   ),
                                 );
                               }
-                              if (state is GetIptvCategoriesError) {
-                                return Center(
-                                  child: Text(
-                                    state.error,
-                                    style: TextStyles.font18Medium(
-                                      context,
-                                    ).copyWith(color: AppColors.subGreyColor),
-                                  ),
-                                );
-                              }
+                           
                               if (state is GetIptvCategoriesSuccess) {
                                 final categories =
                                     state.iptvCategoriesResponse.categories;
@@ -236,13 +227,13 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                     ),
                   ),
 
+                  VerticalDivider(color: AppColors.whiteColor, thickness: 0.3, width: 1),
                   const SizedBox(width: 10),
-
                   // Middle channels list
                   Expanded(
                     child: BlocBuilder<GetIptvChannelsCubit, GetIptvChannelsState>(
                       builder: (context, state) {
-                        if (state is GetIptvChannelsLoading) {
+                        if (state is GetIptvChannelsLoading || state is GetIptvChannelsError) {
                           return Skeletonizer(
                             effect: ShimmerEffect(
                               baseColor: Colors.grey[300]!,
@@ -311,16 +302,7 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                             ),
                           );
                         }
-                        if (state is GetIptvChannelsError) {
-                          return Center(
-                            child: Text(
-                              state.error,
-                              style: TextStyles.font18Medium(
-                                context,
-                              ).copyWith(color: AppColors.subGreyColor),
-                            ),
-                          );
-                        }
+                       
                         if (state is GetIptvChannelsSuccess) {
                           final List<IptvChannel> channels =
                               state.iptvChannelsResponse.channels;
