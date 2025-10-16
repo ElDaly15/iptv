@@ -6,6 +6,9 @@ import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 import 'package:get/get.dart' as g;
 import 'package:iptv/featuers/live_tv/presentation/views/tv_player_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iptv/featuers/live_tv/presentation/manager/get_iptv_categories/get_iptv_categories_cubit.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class LiveTvViewBody extends StatefulWidget {
   const LiveTvViewBody({super.key});
@@ -15,14 +18,22 @@ class LiveTvViewBody extends StatefulWidget {
 }
 
 class _LiveTvViewBodyState extends State<LiveTvViewBody> {
-  final List<String> _categories = const ['Faviourte', 'Recents' , 'Recents','Recents','Recents','Recents','Recents'];
+  // Driven by cubit now; keep a local fallback empty list if needed
   final List<String> _channels = const [
     'demo1', 'demo2', 'demo3', 'demo4', 'demo5', 'demo6', 'demo7', 'demo8', 'demo9'
   ];
+  List<String> fakeCategories = ['Faviourte', 'Recents' , 'Recents','Recents','Recents','Recents','Recents'];
   int _selectedCategory = 0;
   int _selectedChannel = 0;
 
   String get timeText => DateFormat('hh:mm a').format(DateTime.now());
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch categories once when entering the view
+    context.read<GetIptvCategoriesCubit>().getIptvCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,27 +75,92 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                         ),
                         const SizedBox(height: 18),
                         Expanded(
-                          child: ListView.builder(
-                            itemCount: _categories.length,
-                            itemBuilder: (context, index) {
-                              final bool isSelected = index == _selectedCategory;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                                child: GestureDetector(
-                                  onTap: () => setState(() => _selectedCategory = index),
+                          child: BlocBuilder<GetIptvCategoriesCubit, GetIptvCategoriesState>(
+                            builder: (context, state) {
+                              if (state is GetIptvCategoriesLoading) {
+                                  return Skeletonizer(
+                                       effect: ShimmerEffect(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    duration: const Duration(seconds: 1),
+                  ),
+                                    enabled: true,
+                                    child: ListView.builder(
+                                    itemCount: fakeCategories.length,
+                                    itemBuilder: (context, index) {
+                                      final bool isSelected = index == _selectedCategory;
+                                      final name = fakeCategories[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                        child: GestureDetector(
+                                          onTap: () => setState(() => _selectedCategory = index),
+                                          child: Text(
+                                            name,
+                                            style: (isSelected
+                                                    ? TextStyles.font20ExtraBold(context)
+                                                    : TextStyles.font18Medium(context))
+                                                .copyWith(
+                                              color: isSelected
+                                                  ? AppColors.whiteColor
+                                                  : AppColors.subGreyColor,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                                                    ),
+                                  );
+                              }
+                              if (state is GetIptvCategoriesError) {
+                                return Center(
                                   child: Text(
-                                    _categories[index],
-                                    style: (isSelected
-                                            ? TextStyles.font20ExtraBold(context)
-                                            : TextStyles.font18Medium(context))
-                                        .copyWith(
-                                      color: isSelected
-                                          ? AppColors.whiteColor
-                                          : AppColors.subGreyColor,
-                                    ),
+                                    state.error,
+                                    style: TextStyles.font18Medium(context).copyWith(color: AppColors.subGreyColor),
                                   ),
-                                ),
-                              );
+                                );
+                              }
+                              if (state is GetIptvCategoriesSuccess) {
+                                final categories = state.iptvCategoriesResponse.categories;
+                                if (categories.isEmpty) {
+                                  return Center(
+                                    child: Text(
+                                      'No categories',
+                                      style: TextStyles.font18Medium(context).copyWith(color: AppColors.subGreyColor),
+                                    ),
+                                  );
+                                }
+                                // Guard selected index within range after load
+                                if (_selectedCategory >= categories.length) {
+                                  _selectedCategory = 0;
+                                }
+                                return ListView.builder(
+                                  itemCount: categories.length,
+                                  itemBuilder: (context, index) {
+                                    final bool isSelected = index == _selectedCategory;
+                                    final name = categories[index].name;
+                                    
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                      child: GestureDetector(
+                                        onTap: () => setState(() => _selectedCategory = index),
+                                        child: Text(
+                                          name.isEmpty ? 'Unnamed' : name,
+                                          style: (isSelected
+                                                  ? TextStyles.font20ExtraBold(context)
+                                                  : TextStyles.font18Medium(context))
+                                              .copyWith(
+                                            color: isSelected
+                                                ? AppColors.whiteColor
+                                                : AppColors.subGreyColor,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                              // Initial state
+                              return const SizedBox.shrink();
                             },
                           ),
                         ),
