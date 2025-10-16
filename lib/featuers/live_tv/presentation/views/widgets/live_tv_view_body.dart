@@ -15,7 +15,7 @@ class LiveTvViewBody extends StatefulWidget {
 }
 
 class _LiveTvViewBodyState extends State<LiveTvViewBody> {
-  final List<String> _categories = const ['Faviourte', 'Recents'];
+  final List<String> _categories = const ['Faviourte', 'Recents' , 'Recents','Recents','Recents','Recents','Recents'];
   final List<String> _channels = const [
     'demo1', 'demo2', 'demo3', 'demo4', 'demo5', 'demo6', 'demo7', 'demo8', 'demo9'
   ];
@@ -63,26 +63,31 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                           ],
                         ),
                         const SizedBox(height: 18),
-                        ..._categories.asMap().entries.map((e) {
-                          final bool isSelected = e.key == _selectedCategory;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: GestureDetector(
-                              onTap: () => setState(() => _selectedCategory = e.key),
-                              child: Text(
-                                e.value,
-                                style: (isSelected
-                                        ? TextStyles.font20ExtraBold(context)
-                                        : TextStyles.font18Medium(context))
-                                    .copyWith(
-                                  color: isSelected
-                                      ? AppColors.whiteColor
-                                      : AppColors.subGreyColor,
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: _categories.length,
+                            itemBuilder: (context, index) {
+                              final bool isSelected = index == _selectedCategory;
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                                child: GestureDetector(
+                                  onTap: () => setState(() => _selectedCategory = index),
+                                  child: Text(
+                                    _categories[index],
+                                    style: (isSelected
+                                            ? TextStyles.font20ExtraBold(context)
+                                            : TextStyles.font18Medium(context))
+                                        .copyWith(
+                                      color: isSelected
+                                          ? AppColors.whiteColor
+                                          : AppColors.subGreyColor,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          );
-                        }),
+                              );
+                            },
+                          ),
+                        ),
                       ],
                     ),
                   ),
