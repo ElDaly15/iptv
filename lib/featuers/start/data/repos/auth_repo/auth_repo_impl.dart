@@ -20,9 +20,10 @@ class AuthRepoImpl extends AuthRepo {
     try {
       var response = await apiConsumer.post(
         Endpoints.login,
-        body: {'username': username, 'password': password},
+        body: {'macAddress': username, 'customerKey': password},
       );
             await saveToken(response['access_token']);
+            await savePlaylistId(response['customer']['playlists'][2]['id']);
 
       return Right(UserDataModel.fromJson(response));
     } on ServerError catch (e) {

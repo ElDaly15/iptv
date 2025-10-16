@@ -14,3 +14,16 @@ Future<String?> getToken() async {
 Future<void> deleteToken() async {
   await storage.delete(key: 'token');
 }
+
+
+Future<String?> getPlaylistId() async {
+  return await storage.read(key: 'playlist_id');
+}
+
+Future<void> savePlaylistId(String playlistId) async {
+  await storage.write(key: 'playlist_id', value: playlistId);
+}
+
+Future<void> deletePlaylistId() async {
+  await storage.delete(key: 'playlist_id');
+}
