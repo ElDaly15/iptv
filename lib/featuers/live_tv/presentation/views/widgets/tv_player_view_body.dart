@@ -9,8 +9,8 @@ import 'package:chewie/chewie.dart';
 class TvPlayerViewBody extends StatefulWidget {
   final String channelName;
   final String? streamUrl;
-
-  const TvPlayerViewBody({super.key, required this.channelName, this.streamUrl});
+  final bool isLive;
+  const TvPlayerViewBody({super.key, required this.channelName, this.streamUrl, this.isLive = false});
 
   @override
   State<TvPlayerViewBody> createState() => _TvPlayerViewBodyState();
@@ -32,26 +32,27 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
     ]);
     print(widget.streamUrl);
     if (widget.streamUrl != null && widget.streamUrl!.isNotEmpty) {
-      _initPlayer(widget.streamUrl!);
+      _initPlayer(widget.streamUrl!, widget.isLive);
     } else {
       _error = 'No stream URL provided';
     }
   }
 
-  Future<void> _initPlayer(String url) async {
+  Future<void> _initPlayer(String url, bool isLive) async {
     try {
       final bool isHls = url.toLowerCase().contains('.m3u8');
-      final controller = isHls
+      final controller = isHls && isLive
           ? VideoPlayerController.networkUrl(
               Uri.parse(url),
               formatHint: VideoFormat.hls,
             )
-          : VideoPlayerController.networkUrl(Uri.parse(url));
+          : isHls
+              ? VideoPlayerController.networkUrl(Uri.parse(url), formatHint: VideoFormat.hls)
+              : VideoPlayerController.networkUrl(Uri.parse(url));
       controller.addListener(() {
         final value = controller.value;
         if (value.hasError && mounted) {
           setState(() {
-            print(value.errorDescription);
             _error = value.errorDescription ?? 'Failed to load stream';
           });
         }
@@ -66,9 +67,8 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
         autoInitialize: true,
         allowMuting: true,
         // Optimize UI for live HLS streams
-        isLive: isHls,
+        isLive: isHls && isLive,
         errorBuilder: (context, message) {
-          print(message);
           return Center(
             child: Text(
               _error ?? 'Failed to load stream',

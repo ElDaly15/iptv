@@ -280,8 +280,9 @@ class _LiveTvViewBodyState extends State<LiveTvViewBody> {
                                     () => TvPlayerView(
                                       channelName: channel.name.isEmpty ? 'Channel ${index + 1}' : channel.name,
                                       streamUrl: channel.streamUrl.isNotEmpty
-                                          ? channel.streamUrl
+                                          ? 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
                                           : channel.originalData.directSource,
+                                      isLive: channel.streamType == 'live',
                                     ),
                                     transition: g.Transition.fade,
                                     duration: const Duration(milliseconds: 300),
