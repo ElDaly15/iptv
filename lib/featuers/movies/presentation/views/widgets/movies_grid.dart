@@ -59,6 +59,14 @@ class MoviesGrid extends StatelessWidget {
           if (q.isNotEmpty) {
             items = items.where((m) => m.name.toLowerCase().contains(q)).toList();
           }
+          if (q.isNotEmpty && items.isEmpty) {
+            return const Center(
+              child: Text(
+                'No movies',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
