@@ -69,7 +69,7 @@ class MoviesGrid extends StatelessWidget {
                   g.Get.to(
                     () => TvPlayerView(
                       channelName: movie.name,
-                      streamUrl: 'https://avtshare01.rz.tu-ilmenau.de/avt-vqdb-uhd-1/test_2/segments/cutting_orange_tuil_8s_1138kbps_360p_59.94fps_h264.mp4',
+                      streamUrl: movie.streamUrl,
                     ),
                     transition: g.Transition.fade,
                     duration: const Duration(milliseconds: 300),

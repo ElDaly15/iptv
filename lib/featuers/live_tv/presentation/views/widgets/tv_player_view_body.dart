@@ -52,6 +52,7 @@ class _TvPlayerViewBodyState extends State<TvPlayerViewBody> {
       controller.addListener(() {
         final value = controller.value;
         if (value.hasError && mounted) {
+          
           setState(() {
             _error = value.errorDescription ?? 'Failed to load stream';
           });
