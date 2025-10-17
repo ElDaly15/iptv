@@ -15,6 +15,7 @@ class MoviesViewBody extends StatefulWidget {
 
 class _MoviesViewBodyState extends State<MoviesViewBody> {
   String selectedCategory = 'All';
+  String searchQuery = '';
 
   void onCategorySelected(String category) {
     setState(() {
@@ -58,10 +59,14 @@ class _MoviesViewBodyState extends State<MoviesViewBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TopBar(),
+                    TopBar(onSearchChanged: (q) {
+                      setState(() {
+                        searchQuery = q.trim();
+                      });
+                    }),
                     const SizedBox(height: 16),
                     Expanded(
-                      child: MoviesGrid(selectedCategory: selectedCategory),
+                      child: MoviesGrid(selectedCategory: selectedCategory, searchQuery: searchQuery),
                     ),
                   ],
                 ),

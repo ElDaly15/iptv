@@ -4,7 +4,9 @@ import 'package:iptv/core/utils/app_colors.dart';
 import 'package:iptv/core/utils/app_styles.dart';
 
 class TopBar extends StatelessWidget {
-  const TopBar({super.key});
+  final ValueChanged<String>? onSearchChanged;
+
+  const TopBar({super.key, this.onSearchChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class TopBar extends StatelessWidget {
                       ),
                       border: InputBorder.none,
                     ),
+                    onChanged: onSearchChanged,
                   ),
                 ),
               ],

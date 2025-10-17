@@ -8,8 +8,9 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class MoviesGrid extends StatelessWidget {
   final String selectedCategory;
+  final String? searchQuery;
 
-  const MoviesGrid({super.key, required this.selectedCategory});
+  const MoviesGrid({super.key, required this.selectedCategory, this.searchQuery});
 
   int _calculateCrossAxisCount(BuildContext context) {
     final double width = MediaQuery.sizeOf(context).width;
@@ -53,7 +54,11 @@ class MoviesGrid extends StatelessWidget {
         
 
         if (state is GetMoviesSuccess) {
-          final items = state.moviesContentResponse.content;
+          var items = state.moviesContentResponse.content;
+          final q = (searchQuery ?? '').toLowerCase();
+          if (q.isNotEmpty) {
+            items = items.where((m) => m.name.toLowerCase().contains(q)).toList();
+          }
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: crossAxisCount,
