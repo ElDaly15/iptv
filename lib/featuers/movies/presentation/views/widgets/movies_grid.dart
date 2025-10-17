@@ -4,6 +4,7 @@ import 'package:get/get.dart' as g;
 import 'package:iptv/featuers/live_tv/presentation/views/tv_player_view.dart';
 import 'package:iptv/featuers/movies/presentation/manager/get_movies/get_movies_cubit.dart';
 import 'package:iptv/featuers/movies/presentation/views/widgets/movie_card.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MoviesGrid extends StatelessWidget {
   final String selectedCategory;
@@ -24,29 +25,32 @@ class MoviesGrid extends StatelessWidget {
     final int crossAxisCount = _calculateCrossAxisCount(context);
     return BlocBuilder<GetMoviesCubit, GetMoviesState>(
       builder: (context, state) {
-        if (state is GetMoviesLoading) {
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 0.72,
+        if (state is GetMoviesLoading || state is GetMoviesError || state is GetMoviesInitial) {
+          return Skeletonizer(
+            
+            effect: ShimmerEffect(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              duration: const Duration(seconds: 1),
             ),
-            itemCount: 12,
-            itemBuilder: (context, index) {
-              return const Card(color: Colors.grey);
-            },
+            enabled: true,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.72,
+              ),
+              itemCount: 12,
+              itemBuilder: (context, index) {
+                return MovieCard(title: 'Loading...', imageUrl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQYq7Mk3_qT905pUYNwN5JfQjLJoNx6n5iqB2M9iJ5MffZmKLPklzmAUJVs7P2VgVS5gspq3Q');
+              },
+            ),
           );
         }
 
-        if (state is GetMoviesError) {
-          return Center(
-            child: Text(
-              state.error,
-              style: const TextStyle(color: Colors.white),
-            ),
-          );
-        }
+      
+        
 
         if (state is GetMoviesSuccess) {
           final items = state.moviesContentResponse.content;
@@ -65,19 +69,38 @@ class MoviesGrid extends StatelessWidget {
                   g.Get.to(
                     () => TvPlayerView(
                       channelName: movie.name,
-                      streamUrl: movie.streamUrl,
+                      streamUrl: 'https://avtshare01.rz.tu-ilmenau.de/avt-vqdb-uhd-1/test_2/segments/cutting_orange_tuil_8s_1138kbps_360p_59.94fps_h264.mp4',
                     ),
                     transition: g.Transition.fade,
                     duration: const Duration(milliseconds: 300),
                   );
                 },
-                child: MovieCard(title: movie.name),
+                child: MovieCard(title: movie.name, imageUrl: movie.icon),
               );
             },
           );
         }
 
-        return const SizedBox.shrink();
+          return Skeletonizer(
+            effect: ShimmerEffect(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              duration: const Duration(seconds: 1),
+            ),
+            enabled: true,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.72,
+              ),
+              itemCount: 12,
+              itemBuilder: (context, index) {
+                return MovieCard(title: 'Loading...', imageUrl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQYq7Mk3_qT905pUYNwN5JfQjLJoNx6n5iqB2M9iJ5MffZmKLPklzmAUJVs7P2VgVS5gspq3Q');
+              },
+            ),
+          );
       },
     );
   }

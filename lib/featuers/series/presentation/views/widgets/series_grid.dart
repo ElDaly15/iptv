@@ -108,7 +108,7 @@ class SeriesGrid extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
             );
           },
-          child: MovieCard(title: title),
+          child: MovieCard(title: title, imageUrl: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQYq7Mk3_qT905pUYNwN5JfQjLJoNx6n5iqB2M9iJ5MffZmKLPklzmAUJVs7P2VgVS5gspq3Q'),
         );
       },
     );

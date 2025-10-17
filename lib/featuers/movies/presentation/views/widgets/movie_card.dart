@@ -9,8 +9,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class MovieCard extends StatelessWidget {
   final String title;
-
-  const MovieCard({super.key, required this.title});
+  final String imageUrl;
+  const MovieCard({super.key, required this.title, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class MovieCard extends StatelessWidget {
                     width: double.infinity,
                     fit: BoxFit.cover,
                     imageUrl:
-                        'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQYq7Mk3_qT905pUYNwN5JfQjLJoNx6n5iqB2M9iJ5MffZmKLPklzmAUJVs7P2VgVS5gspq3Q',
+                        imageUrl,
                   ),
                 ),
             ),

@@ -57,6 +57,17 @@ class CategoriesPanel extends StatelessWidget {
                 .where((c) => c.name.trim().isNotEmpty)
                 .toList();
 
+            // Auto-select and fetch for the first category if current selection is not in the list
+            final bool hasSelection = dynamicCategories.any((c) => c.name == selectedCategory);
+            if (dynamicCategories.isNotEmpty && !hasSelection) {
+              final MovieCategory first = dynamicCategories.first;
+              // Defer actions until after this frame to avoid setState in build
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<GetMoviesCubit>().getMovies(first.id);
+                onCategorySelected(first.name);
+              });
+            }
+
             // Deduplicate by id while preserving order
             final Map<String, MovieCategory> byId = <String, MovieCategory>{};
             for (final c in [...baseCategories, ...dynamicCategories]) {
