@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iptv/core/utils/app_colors.dart';
+import 'package:iptv/featuers/movies/presentation/manager/get_movies_category/get_movies_category_cubit.dart';
 import 'package:iptv/featuers/movies/presentation/views/widgets/categories_panel.dart';
 import 'package:iptv/featuers/movies/presentation/views/widgets/movies_grid.dart';
 import 'package:iptv/featuers/movies/presentation/views/widgets/top_bar.dart';
@@ -19,7 +21,11 @@ class _MoviesViewBodyState extends State<MoviesViewBody> {
       selectedCategory = category;
     });
   }
-
+  @override
+  void initState() {
+    super.initState();
+    context.read<GetMoviesCategoryCubit>().getMoviesCategory();
+  }
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
