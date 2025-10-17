@@ -6,6 +6,7 @@ import 'package:iptv/core/services/api/dio_consumer.dart';
 import 'package:iptv/core/services/api/endpoints.dart';
 import 'package:iptv/core/services/secure_storage.dart';
 import 'package:iptv/featuers/movies/data/models/movie_category_model.dart';
+import 'package:iptv/featuers/movies/data/models/movie_model.dart';
 import 'package:iptv/featuers/movies/data/repos/movies_repo/movies_repo.dart';
 
 class MoviesRepoImpl extends MoviesRepo {
@@ -15,6 +16,18 @@ class MoviesRepoImpl extends MoviesRepo {
       var playlistId = await getPlaylistId();
       var response = await DioConsumer(dio: Dio()).get(Endpoints.getMovieCategories(playlistId!));
       return Right(MovieCategoriesResponse.fromJson(response));
+    } on ServerError catch (e) {
+      return Left(Failuer(e.errorModel.errorMsg));
+    } catch (e) {
+      return Left(Failuer(e.toString()));
+    }
+  }
+  @override
+  Future<Either<Failuer, MoviesContentResponse>> getMovieItems(String categoryId) async {
+    try {
+      var playlistId = await getPlaylistId();
+      var response = await DioConsumer(dio: Dio()).get(Endpoints.getMovieItems(categoryId, playlistId!));
+      return Right(MoviesContentResponse.fromJson(response));
     } on ServerError catch (e) {
       return Left(Failuer(e.errorModel.errorMsg));
     } catch (e) {
